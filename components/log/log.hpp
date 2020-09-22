@@ -61,4 +61,4 @@ namespace components {
     auto initialization_logger(std::shared_ptr<spdlog::logger>) -> void;
     auto initialization_logger() -> log_t;
 
-} // namespace rocketjoe
+} // namespace cosmoport

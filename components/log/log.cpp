@@ -57,4 +57,4 @@ namespace components {
         spdlog::register_logger(std::move(logger));
     }
 
-} // namespace rocketjoe
+} // namespace cosmoport

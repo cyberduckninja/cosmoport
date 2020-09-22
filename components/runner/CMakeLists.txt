@@ -1,16 +1,17 @@
-set(CURRENT_TARGET configuration)
+set(CURRENT_TARGET runner)
 
 list(APPEND CURRENT_${TARGET_HEADERS}
-        configuration.hpp
+        log.hpp
 )
 
-#list(APPEND CURRENT_${TARGET_HEADERS}
-#)
+list(APPEND CURRENT_${TARGET_HEADERS}
+        log.cpp
+)
 
 
-add_library(cosmoport_${CURRENT_TARGET} INTERFACE
-#            ${CURRENT_${TARGET_HEADERS}}
-#            ${CURRENT_${TARGET_HEADERS}}
+add_library(cosmoport_${CURRENT_TARGET} STATIC
+            ${CURRENT_${TARGET_HEADERS}}
+            ${CURRENT_${TARGET_HEADERS}}
 )
 
 
@@ -19,19 +20,17 @@ add_library(cosmoport::${CURRENT_TARGET} ALIAS cosmoport_${CURRENT_TARGET})
 set_property(TARGET cosmoport_${CURRENT_TARGET} PROPERTY EXPORT_NAME ${CURRENT_TARGET})
 
 target_link_libraries(
-        cosmoport_${CURRENT_TARGET}
-        INTERFACE
-        #PRIVATE
-        #${Boost_LIBRARIES}
-        #${CONAN_LIBS}
+        cosmoport_${CURRENT_TARGET} PRIVATE
+        ${CONAN_LIBS}
 )
 
 target_include_directories(
         cosmoport_${CURRENT_TARGET}
-        INTERFACE
-        "../.."
+        PUBLIC
+        "../../../"
 )
 
+add_subdirectory(test)
 
 install(TARGETS
         cosmoport_${CURRENT_TARGET}

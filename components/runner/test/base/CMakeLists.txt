@@ -1,9 +1,10 @@
-set(CURRENT_TARGET timer_manager_base_test)
+set(CURRENT_TARGET test_runner)
 
 add_executable(${CURRENT_TARGET} main.cpp)
 
 target_link_libraries(
         ${CURRENT_TARGET} PRIVATE
-        cosmoport::timer_manager
+        ${CONAN_LIBS}
+        cosmoport::runner
 )
 

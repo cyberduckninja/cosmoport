@@ -1,8 +1,8 @@
 [requires]
 boost/1.72.0
 yaml-cpp/0.6.3
-spdlog/1.5.0@_/_
-nlohmann_json/3.7.3@_/_
+spdlog/1.5.0
+nlohmann_json/3.7.3
 cppzmq/4.6.0@bincrafters/stable
 gtest/1.10.0
 
