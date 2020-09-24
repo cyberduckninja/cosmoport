@@ -11,14 +11,12 @@
 namespace components {
 
     struct job_t final {
-        std::string name_;
         boost::filesystem::path bin;
         std::vector<std::string> args;
-        int parallel = 0;
-
+        ///int parallel = 0;
     };
 
-    struct  dag_t   final {
+    struct dag_t final {
         std::string name_;
         std::list<job_t> job_list;
     };
@@ -35,24 +33,24 @@ namespace components {
 
     class dag_context_t {
     public:
-        dag_context_t() : work_(boost::asio::make_work_guard(ios_.get_executor())) {}
+        dag_context_t() : work_(boost::asio::make_work_guard(ios_)) {}
 
         ~dag_context_t() {
+            ios_.stop();
+            t_.join();
             std::error_code ec;
             group_.wait(ec);
             if (ec) {
                 std::cerr << "Error" << std::endl;
             }
-            ios_.stop();
-            t_.join();
-            for(auto&i:job_contexts_){
+            for (auto &i:job_contexts_) {
                 i.release();
             }
         }
 
         void push(job_t &j) {
             std::call_once(
-                    flag1,
+                    flag_,
                     [this]() {
                         t_ = std::thread(
                                 [this]() {
@@ -67,17 +65,18 @@ namespace components {
                     boost::process::child(
                             j.bin,
                             j.args,
+                            group_,
                             boost::process::std_in < ctx->in_,
                             boost::process::std_out > ctx->out_,
                             boost::process::std_err > ctx->error_,
-                            group_
+                            ios_
                     ),
                     ec);
             job_contexts_.emplace_back(std::move(ctx));
         }
 
     private:
-        std::once_flag flag1;
+        std::once_flag flag_;
         std::list<std::unique_ptr<job_context_t>> job_contexts_;
         boost::process::group group_;
         boost::asio::io_service ios_;
@@ -89,10 +88,14 @@ namespace components {
 
     class process_manager final {
     public:
-        process_manager() =default;
-        ~process_manager()=default;
+        process_manager() = default;
+
+        ~process_manager() = default;
+
         process_manager(const process_manager &) = delete;
+
         process_manager &operator=(const process_manager &) = delete;
+
         void run(dag_t &dag);
 
         void clear(const std::string &name) {
