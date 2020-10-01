@@ -423,3 +423,5 @@ thirdparty/actor-zeta
 thirdparty/cxxopts/include
 
 **/.#session.*
+conan.lock
+graph_info.json

@@ -1,11 +1,11 @@
 set(CURRENT_TARGET runner)
 
 list(APPEND CURRENT_${TARGET_HEADERS}
-        log.hpp
+        process_manager.hpp
 )
 
 list(APPEND CURRENT_${TARGET_HEADERS}
-        log.cpp
+        process_manager.cpp
 )
 
 
